@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ゲーミング性格診断</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="start-screen">
+    <h1>ゲーミング性格診断</h1>
+    <p>ちょっとした質問に答えてみてね</p>
+    <button id="start-btn">はじめる</button>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div class="screen" id="question-screen">
+
+    <!-- Progress bar -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- QUESTION 1 -->
+    <div class="question">
+      <p class="question-number"></p>
+      <h2 class="question-text"></h2>
+      <div class="answers">
+        <button class="answer-btn"></button>
+        <button class="answer-btn"></button>
+        <button class="answer-btn"></button>
+        <button class="answer-btn"></button>
+      </div>
+    </div>
+
+    <!-- QUESTION 2 -->
+    <div class="question">
+      <p class="question-number"></p>
+      <h2 class="question-text"></h2>
+      <div class="answers">
+        <button class="answer-btn"></button>
+        <button class="answer-btn"></button>
+        <button class="answer-btn"></button>
+        <button class="answer-btn"></button>
+      </div>
+    </div>
+
+    <button id="next-btn">次へ</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
