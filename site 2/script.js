@@ -68,17 +68,25 @@ function showSlices() {
     ["cake_slice.png", "konig.png"]
   ];
 
+  let revealedCount = 0;
+  const TOTAL = data.length;
+  let giftScheduled = false;
+
   data.forEach(pair => {
     const img = document.createElement("img");
     img.src = "images/" + pair[0];
     img.className = "slice";
 
     img.onclick = () => {
+      if (img.className === "sticker") return;
+
       img.src = "images/" + pair[1];
       img.className = "sticker";
-      img.onclick = null;
+      revealedCount++;
 
-      if ([...slices.children].every(i => i.className === "sticker")) {
+      if (revealedCount === TOTAL && !giftScheduled) {
+        giftScheduled = true; // 🔒 LOCK IT
+
         setTimeout(() => {
           slices.remove();
           giftScene.classList.remove("hidden");
@@ -109,14 +117,20 @@ function createBalloons() {
   }
 }
 
+let balloonInterval = null;
+
 function spawnSideBalloons() {
-  setInterval(() => {
+  if (balloonInterval) return; // 🚫 prevent double start
+
+  balloonInterval = setInterval(() => {
     ["5vw", "90vw"].forEach(pos => {
       const b = document.createElement("img");
       b.src = "images/balloon.png";
       b.className = "balloon";
       b.style.left = pos;
+      b.style.pointerEvents = "none"; // 👈 VERY IMPORTANT
       document.body.appendChild(b);
+
       setTimeout(() => b.remove(), 6000);
     });
   }, 1000);
