@@ -11,6 +11,12 @@
   <div class="screen active" id="start-screen">
     <h1>自分のタイプを知る</h1>
     <p>以下の質問に正直に答えて、自分のタイプを知りましょう</p>
+    <input
+    type="text"
+    id="user-name"
+    placeholder="お名前を入力してください"
+    required
+  />
     <button id="start-btn">はじめる</button>
   </div>
 
@@ -48,7 +54,27 @@
 
     <button id="next-btn">次へ</button>
   </div>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <script src="script.js"></script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBS_d1QFO1JxTghNhZl6kFuF_v383SeY",
+      authDomain: "b-day-8d1ae.firebaseapp.com",
+      projectId: "b-day-8d1ae",
+      storageBucket: "b-day-8d1ae.appspot.com",
+      messagingSenderId: "478587630006",
+      appId: "1:478587630006:web:24b3866c585722134d117"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // expose Firestore to script.js
+    window.firebaseDB = db;
+  </script>
+
+  <script src="script.js" type="module"></script>
 </body>
 </html>

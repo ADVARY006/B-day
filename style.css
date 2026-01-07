@@ -43,6 +43,22 @@ body {
   max-width: 420px;
 }
 
+#user-name {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.8rem 1rem;
+  margin-top: 1rem;
+
+  border-radius: 12px;
+  border: 2px solid #f3b6c6;
+
+  font-size: 1rem;
+  outline: none;
+}
+
+#user-name:focus {
+  border-color: #f7c8d8;
+}
 /* ========= BUTTONS ========= */
 button {
   margin-top: 1.5rem;

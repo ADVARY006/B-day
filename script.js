@@ -1,4 +1,12 @@
+import {
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 /* ========= DOM ELEMENTS ========= */
+const nameInput = document.getElementById("user-name");
+let userName = "";
+
 const startScreen = document.getElementById("start-screen");
 const questionScreen = document.getElementById("question-screen");
 
@@ -18,6 +26,21 @@ let selectedOnPage = [false, false];
 
 const QUESTIONS_PER_PAGE = 2;
 const TOTAL_QUESTIONS = 10;
+
+/* ========= FIREBASE SAVE ========= */
+async function saveQuizAnswersToFirebase(answersArray) {
+  const db = window.firebaseDB;
+
+  if (!db) {
+    throw new Error("Firestore DB not initialized");
+  }
+
+  await addDoc(collection(db, "quizAnswers"), {
+    name: userName,
+    answers: answersArray,
+    submittedAt: new Date()
+  });
+}
 
 /* ========= QUESTIONS DATA ========= */
 const quizQuestions = [
@@ -133,64 +156,57 @@ function loadQuestions() {
         buttons.forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected");
 
-        // save answer
         userAnswers[dataIndex] = quizQuestions[dataIndex].answers[btnIndex];
-
-        // mark this question answered
         selectedOnPage[qIndex] = true;
 
-        checkPageCompletion();
+        if (selectedOnPage[0] && selectedOnPage[1]) {
+          nextBtn.disabled = false;
+        }
       };
     });
   });
 
-  updateProgress();
-  updateButtonText();
-}
-
-function checkPageCompletion() {
-  if (selectedOnPage[0] && selectedOnPage[1]) {
-    nextBtn.disabled = false;
-  }
-}
-
-function updateProgress() {
   const percent =
     ((currentQuestionIndex + QUESTIONS_PER_PAGE) / TOTAL_QUESTIONS) * 100;
   progressBar.style.width = `${percent}%`;
-}
 
-function updateButtonText() {
-  if (currentQuestionIndex + QUESTIONS_PER_PAGE >= TOTAL_QUESTIONS) {
-    nextBtn.textContent = "完了";
-  } else {
-    nextBtn.textContent = "次へ";
-  }
+  nextBtn.textContent =
+    currentQuestionIndex + QUESTIONS_PER_PAGE >= TOTAL_QUESTIONS
+      ? "完了"
+      : "次へ";
 }
 
 /* ========= EVENTS ========= */
 startBtn.addEventListener("click", () => {
+  if (!nameInput.value.trim()) {
+    alert("お名前を入力してください 💕");
+    return;
+  }
+
+  userName = nameInput.value.trim();
   startScreen.classList.remove("active");
   questionScreen.classList.add("active");
   loadQuestions();
 });
 
-nextBtn.addEventListener("click", () => {
+nextBtn.addEventListener("click", async () => {
   currentQuestionIndex += QUESTIONS_PER_PAGE;
 
-  // reset page state
   selectedOnPage = [false, false];
   nextBtn.disabled = true;
 
   if (currentQuestionIndex >= TOTAL_QUESTIONS) {
-    // ✅ SAVE ANSWERS FOR SITE 2
+    console.log("Attempting Firebase save...");
+
+    await saveQuizAnswersToFirebase(userAnswers);
+
+    console.log("Firebase save SUCCESS");
+
     localStorage.setItem("herAnswers", JSON.stringify(userAnswers));
 
-    // ✅ DEV CHECK
-    console.log("User answers:", userAnswers);
-
-    // ✅ MOVE TO BIRTHDAY SITE
-    window.location.href = "../site 2/birthday.html";
+    setTimeout(() => {
+      window.location.href = "../site 2/birthday.html";
+    }, 300);
   } else {
     loadQuestions();
   }
